@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Check if the script is being run as root
 if [ "$EUID" -ne 0 ]; then
