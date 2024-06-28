@@ -6,14 +6,11 @@ Here, you'll find a collection of scripts designed to simplify the installation 
 
 These scripts are free to use and can be executed directly using curl from our content delivery network:
 
-For example execute:
+### Docker.sh
 
 ```bash
-curl https://install-scripts.b-cdn.net/scriptname.sh | sh
+curl https://install-scripts.b-cdn.net/docker.sh | sh
 ```
-Replace scriptname.sh with the specific script you want to install.
-
-## Docker.sh
 
 Stages: 
 
@@ -37,6 +34,28 @@ If accepted, creates the 'docker' user, assigns it to the 'docker' group, and se
 
 9. Lists non-root users and prompts whether to add each user to the Docker group (docker).
 If confirmed (y), adds the user to the Docker group using usermod.
+
+
+### Update.sh
+
+```bash
+curl https://install-scripts.b-cdn.net/update.sh | sh
+```
+
+Stages:
+
+1. Asks the user if they want to run a dist-upgrade (full system upgrade) with a timeout of 10 seconds. If no response is given within the timeout, it skips the upgrade.
+
+2. Updates the package lists using `sudo apt update`.
+
+3. Upgrades installed packages using `sudo apt upgrade -y`.
+
+4. Calls the ask_dist_upgrade function to handle user input for running `sudo apt dist-upgrade -y`.
+
+5. Cleans up unnecessary packages using `sudo apt autoremove -y` and `sudo apt autoclean`.
+
+6. Notifies the user when the update and upgrade process is complete.
+
 
 
 ## License
