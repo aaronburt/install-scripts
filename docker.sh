@@ -13,12 +13,12 @@ compute_sha256() {
   elif command -v sha256sum &> /dev/null; then 
     echo $(sha256sum $1 | awk '{ print $1 }')
   else 
-    read -p "'shasum' and 'sha256sum' are not installed. Do you want to install 'shasum'? (y/n): " install_response
-    if [ "$install_response" = "y" ]; then 
-      apt-get update && apt-get install -y perl-Digest-SHA 
+    echo "Neither 'shasum' nor 'sha256sum' is installed. Installing 'shasum'..."
+    apt-get update && apt-get install -y perl-Digest-SHA 
+    if command -v shasum &> /dev/null; then 
       echo $(shasum -a 256 $1 | awk '{ print $1 }')
     else 
-      echo "Cannot compute SHA256 hash without required tools. Exiting."
+      echo "Failed to install 'shasum'. Exiting."
       exit 1
     fi
   fi
@@ -30,6 +30,10 @@ curl -fsSL https://get.docker.com -o get-docker.sh
 
 # Step 2: Compute the SHA256 hash of the downloaded script
 HASH=$(compute_sha256 get-docker.sh)
+if [ -z "$HASH" ]; then 
+  echo "Failed to compute SHA256 hash. Exiting."
+  exit 1
+fi
 echo "The SHA256 hash of the downloaded script is: $HASH"
 
 # Step 3: Ask the user to confirm the hash is correct
@@ -66,7 +70,7 @@ if [ -z "$NON_ROOT_USERS" ]; then
       useradd -m -g docker docker
     fi
     echo "Setting password for 'docker' user..."
-    echo "docker:docker" | passwd docker --stdin > /dev/null 2>&1
+    echo "docker:docker" | passwd --stdin docker > /dev/null 2>&1
     usermod -aG docker docker
     echo "User 'docker' has been created with the password 'docker' and added to the Docker group."
   else 
