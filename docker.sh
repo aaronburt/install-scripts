@@ -1,5 +1,7 @@
 #!/bin/bash
 
+
+
 USERID="$(id -u)"
 
 if [ "$USERID" -ne 0 ]; then
@@ -7,8 +9,12 @@ if [ "$USERID" -ne 0 ]; then
     exit 1
 fi
 
-read -p "Do you want to install docker?: " install_docker_choice
+read -p "Do you want to update the system and install docker?: " install_docker_choice
 if [ "$install_docker_choice" = "y" ]; then
+
+    echo "Updating the system"
+    apt-get update && apt-get upgrade -y
+
     echo "Installing docker from https://get.docker.com"
     curl https://get.docker.com | sh
 
